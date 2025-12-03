@@ -1,0 +1,59 @@
+[project]
+name = "data-engineer-application"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "faker>=38.2.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "bandit>=1.7.9",
+    "black>=24.10.0",
+    "flake8>=7.1.1",
+    "isort>=5.13.2",
+    "mypy>=1.12.0",
+    "pytest>=8.3.4",
+    "pytest-cov>=6.0.0",
+]
+
+[tool.black]
+line-length = 88
+target-version = ["py312"]
+
+[tool.isort]
+profile = "black"
+line_length = 88
+
+[tool.flake8]
+max-line-length = 88
+exclude = [
+    ".git",
+    ".venv",
+    "__pycache__",
+    "build",
+    "dist",
+]
+extend-ignore = [
+    "E203", # whitespace before ':' - conflicts with Black
+    "W503", # line break before binary operator - conflicts with Black
+]
+per-file-ignores = []
+
+[tool.mypy]
+python_version = "3.12"
+warn_unused_configs = true
+disallow_untyped_defs = true
+check_untyped_defs = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+addopts = "-ra --strict-markers --strict-config"
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.bandit]
+skips = ["B101"] # allow assert in tests
+exclude_dirs = [".git", ".venv", "tests"]
