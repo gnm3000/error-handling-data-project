@@ -1,10 +1,12 @@
-import polars as pl
-import pandas as pd
 import logging
 
-from .exceptions import FileNotFoundError, InvalidSchemaError, CorruptedFileError
+import pandas as pd
+import polars as pl
+
+from .exceptions import CorruptedFileError, FileNotFoundError, InvalidSchemaError
 
 logger = logging.getLogger(__name__)
+
 
 def read_csv(path: str) -> pl.DataFrame:
     """Read a CSV file into a Polars DataFrame."""
