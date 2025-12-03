@@ -6,11 +6,11 @@ from ingestion.validator import validate_columns
 
 
 def test_valid_schema() -> None:
-    df = pl.DataFrame({"id": [1, 2], "name": ["a", "b"]})
-    assert validate_columns(df, {"id": pl.Int64, "name": pl.Utf8})
+    df = pl.DataFrame({"id": ["1", "2"], "name": ["a", "b"]})
+    assert validate_columns(df, {"id": pl.Utf8, "name": pl.Utf8})
 
 
 def test_missing_column() -> None:
-    df = pl.DataFrame({"id": [1]})
+    df = pl.DataFrame({"id": ["1"]})
     with pytest.raises(InvalidSchemaError):
-        validate_columns(df, {"id": pl.Int64, "name": pl.Utf8})
+        validate_columns(df, {"id": pl.Utf8, "name": pl.Utf8})

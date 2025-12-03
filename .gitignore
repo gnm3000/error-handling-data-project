@@ -32,3 +32,15 @@ pip-wheel-metadata/
 
 # OS metadata
 .DS_Store
+
+# Profiling artifacts
+profile.pstats
+profile.html
+profile.json
+*.pstats
+*.prof
+scalene_profile.html
+scalene_*.html
+scalene_profile.json
+scalene_*.json
+*.scalene
