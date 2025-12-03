@@ -30,8 +30,5 @@ pip-wheel-metadata/
 .envrc
 .python-version
 
-# Generated data
-generation-data/data.json
-
 # OS metadata
 .DS_Store
