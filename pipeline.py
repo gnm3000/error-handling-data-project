@@ -28,7 +28,12 @@ def load_clean(path: str = "generation-data/data.json") -> pl.DataFrame:
 
     df = pl.read_json(path_obj)
     logger.info(
-        {"stage": "loaded", "rows": df.height, "cols": df.columns, "path": str(path_obj)}
+        {
+            "stage": "loaded",
+            "rows": df.height,
+            "cols": df.columns,
+            "path": str(path_obj),
+        }
     )
 
     validate_columns(df, REQUIRED_SCHEMA)
