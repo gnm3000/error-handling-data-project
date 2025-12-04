@@ -8,10 +8,13 @@ from pathlib import Path
 from typing import Iterator, Sequence, Tuple
 
 from faker import Faker
+import polars as pl
 from tqdm import tqdm
 
+LARGE_DIR = Path(__file__).parent / "large"
 DEFAULT_ROWS = 10_000_000
-DEFAULT_OUTPUT = Path("generation-data/data_large.ndjson")
+DEFAULT_OUTPUT = LARGE_DIR / "data_large.ndjson"
+DEFAULT_FORMATS = ("ndjson", "parquet")
 DEFAULT_WORKERS = 8
 DEFAULT_CHUNK_SIZE = 100_000
 
@@ -69,6 +72,24 @@ def write_ndjson(
             bar.update(count)
 
 
+def convert_from_ndjson(ndjson_path: Path, formats: Sequence[str]) -> dict[str, Path]:
+    """Stream-convert NDJSON into other formats without loading whole dataset."""
+    outputs: dict[str, Path] = {"ndjson": ndjson_path}
+    lf = pl.scan_ndjson(ndjson_path)
+
+    if "parquet" in formats:
+        parquet_path = ndjson_path.with_suffix(".parquet")
+        lf.sink_parquet(parquet_path)
+        outputs["parquet"] = parquet_path
+
+    if "csv" in formats:
+        csv_path = ndjson_path.with_suffix(".csv")
+        lf.sink_csv(csv_path)
+        outputs["csv"] = csv_path
+
+    return outputs
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(
         description="Generate a large NDJSON dataset with Faker."
@@ -86,6 +107,12 @@ def main() -> None:
         help="Output path for NDJSON file",
     )
     parser.add_argument(
+        "--formats",
+        type=str,
+        default=",".join(DEFAULT_FORMATS),
+        help="Comma-separated formats to write (ndjson,parquet,csv). ndjson is always written.",
+    )
+    parser.add_argument(
         "--workers",
         type=int,
         default=DEFAULT_WORKERS,
@@ -99,10 +126,20 @@ def main() -> None:
     )
     args = parser.parse_args()
 
+    formats = [fmt.strip() for fmt in args.formats.split(",") if fmt.strip()]
+    if "ndjson" not in formats:
+        formats = ["ndjson", *formats]
+
     write_ndjson(
-        output_path=args.output, rows=args.rows, chunk_size=args.chunk_size, workers=args.workers
+        output_path=args.output,
+        rows=args.rows,
+        chunk_size=args.chunk_size,
+        workers=args.workers,
     )
-    print(f"Wrote {args.rows:,} records to {args.output}")
+
+    outputs = convert_from_ndjson(args.output, formats)
+    written = ", ".join(f"{k}={v}" for k, v in outputs.items())
+    print(f"Wrote {args.rows:,} records → {written}")
 
 
 if __name__ == "__main__":
