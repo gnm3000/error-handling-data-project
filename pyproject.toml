@@ -6,8 +6,12 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "faker>=38.2.0",
+    "jupyter>=1.1.1",
+    "memory-profiler>=0.61.0",
     "pandas>=2.3.3",
     "polars>=1.35.2",
+    "pyarrow>=22.0.0",
+    "tqdm>=4.66.4",
 ]
 
 [project.optional-dependencies]
@@ -19,6 +23,7 @@ dev = [
     "mypy>=1.12.0",
     "pytest>=8.3.4",
     "pytest-cov>=6.0.0",
+    "pytest-benchmark>=4.0.0",
     "scalene>=1.5.48",
     "snakeviz>=2.2.1",
 ]
@@ -66,4 +71,5 @@ exclude_dirs = [".git", ".venv", "tests"]
 dev = [
     "scalene>=1.5.55",
     "snakeviz>=2.2.2",
+    "pytest-benchmark>=4.0.0",
 ]

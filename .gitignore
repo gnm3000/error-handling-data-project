@@ -44,3 +44,11 @@ scalene_*.html
 scalene_profile.json
 scalene_*.json
 *.scalene
+
+*.parquet
+*.csv
+*.ndjson
+
+
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/
