@@ -102,7 +102,7 @@ def configure_logging(level: int = logging.INFO) -> None:
     )
 
 
-def load_clean(path: str | Path = "generation-data/data_large.parquet") -> pl.LazyFrame:
+def load_clean(path: str | Path = "generation-data/large/data_large.ndjson") -> pl.LazyFrame:
     """
     1. Lazily scan the file.
     2. Validate required schema without materializing data.

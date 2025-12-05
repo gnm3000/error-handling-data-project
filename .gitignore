@@ -45,10 +45,9 @@ scalene_profile.json
 scalene_*.json
 *.scalene
 
-*.parquet
-*.csv
-*.ndjson
-
+# Data artifacts
+generation-data/large/
+!generation-data/small/**
 
 .ipynb_checkpoints/
 */.ipynb_checkpoints/
