@@ -2,13 +2,12 @@ from __future__ import annotations
 
 import argparse
 import json
-import math
 from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 from typing import Iterator, Sequence, Tuple
 
-from faker import Faker
 import polars as pl
+from faker import Faker
 from tqdm import tqdm
 
 LARGE_DIR = Path(__file__).parent / "large"
@@ -52,7 +51,6 @@ def write_ndjson(
 
     Uses multiple worker processes to generate chunks in parallel.
     """
-    faker = Faker()
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     # Build chunk sizes with one extra remainder chunk if needed.
@@ -61,9 +59,13 @@ def write_ndjson(
     if remainder:
         chunks = [*chunks, remainder]
 
-    with output_path.open("w", encoding="utf-8") as handle, tqdm(
-        total=rows, unit="row", unit_scale=True, desc="Generating", smoothing=0.05
-    ) as bar, ProcessPoolExecutor(max_workers=workers) as pool:
+    with (
+        output_path.open("w", encoding="utf-8") as handle,
+        tqdm(
+            total=rows, unit="row", unit_scale=True, desc="Generating", smoothing=0.05
+        ) as bar,
+        ProcessPoolExecutor(max_workers=workers) as pool,
+    ):
         # Keep seeds deterministic per chunk.
         tasks = ((count, i) for i, count in enumerate(chunks))
         for chunk_str, count in zip(pool.map(_generate_chunk, tasks), chunks):
@@ -110,7 +112,10 @@ def main() -> None:
         "--formats",
         type=str,
         default=",".join(DEFAULT_FORMATS),
-        help="Comma-separated formats to write (ndjson,parquet,csv). ndjson is always written.",
+        help=(
+            "Comma-separated formats to write (ndjson,parquet,csv). "
+            "ndjson is always written."
+        ),
     )
     parser.add_argument(
         "--workers",

@@ -21,6 +21,7 @@ class CorruptedFileError(IngestionError):
 
     pass
 
+
 class IngestionMemoryError(IngestionError):
     """Raised when a dataset exceeds memory constraints."""
 

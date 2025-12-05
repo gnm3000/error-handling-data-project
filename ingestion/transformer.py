@@ -38,15 +38,13 @@ def clean(df: FrameLike) -> pl.LazyFrame:
 
     # Apply lazy cleaning across the full source without eager materialization.
     cleaned = (
-        frame
-        .drop_nulls()
+        frame.drop_nulls()
         .with_columns(
             [
                 pl.col("name")
                 .str.strip_chars(characters=" \n\r\t")
                 .str.replace_all(r"\s+", " ")
                 .alias("name"),
-
                 pl.col("id")
                 .cast(pl.Utf8)
                 .str.strip_chars(characters=" \n\r\t")

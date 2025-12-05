@@ -7,7 +7,6 @@ from typing import TypedDict
 import polars as pl
 from faker import Faker
 
-
 SMALL_DIR = Path(__file__).parent / "small"
 JSON_PATH = SMALL_DIR / "data.json"
 CSV_PATH = SMALL_DIR / "data.csv"

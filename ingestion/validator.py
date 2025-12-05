@@ -3,14 +3,15 @@ from __future__ import annotations
 from typing import Mapping
 
 import polars as pl
-from polars.datatypes import DataType
+from polars._typing import PolarsDataType
 
 from .exceptions import InvalidSchemaError
 
 FrameLike = pl.DataFrame | pl.LazyFrame
+SchemaMapping = Mapping[str, PolarsDataType]
 
 
-def _get_schema(frame: FrameLike) -> Mapping[str, DataType]:
+def _get_schema(frame: FrameLike) -> SchemaMapping:
     """
     Unified schema extractor.
     LazyFrame: uses collect_schema() (does not materialize data).
@@ -23,7 +24,7 @@ def _get_schema(frame: FrameLike) -> Mapping[str, DataType]:
 
 def validate_columns(
     df: FrameLike,
-    required: Mapping[str, DataType],
+    required: SchemaMapping,
     *,
     allow_subtypes: bool = False,
 ) -> bool:
@@ -63,7 +64,7 @@ def validate_columns(
     return True
 
 
-def _is_dtype_compatible(actual: DataType, expected: DataType) -> bool:
+def _is_dtype_compatible(actual: PolarsDataType, expected: PolarsDataType) -> bool:
     """
     Define a minimal compatibility rule-set.
     Extend if your domain requires coercions between numeric widths.
@@ -73,9 +74,18 @@ def _is_dtype_compatible(actual: DataType, expected: DataType) -> bool:
         - Utf8 is only compatible with Utf8.
         - Boolean is exact.
     """
-    numeric_types = {pl.Int8, pl.Int16, pl.Int32, pl.Int64,
-                     pl.UInt8, pl.UInt16, pl.UInt32, pl.UInt64,
-                     pl.Float32, pl.Float64}
+    numeric_types: set[PolarsDataType] = {
+        pl.Int8,
+        pl.Int16,
+        pl.Int32,
+        pl.Int64,
+        pl.UInt8,
+        pl.UInt16,
+        pl.UInt32,
+        pl.UInt64,
+        pl.Float32,
+        pl.Float64,
+    }
 
     if actual == expected:
         return True

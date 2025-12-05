@@ -1,17 +1,18 @@
 from __future__ import annotations
 
 import logging
-from pathlib import Path
 import os
+from pathlib import Path
+from typing import Callable
 
 import pandas as pd
 import polars as pl
 
 from .exceptions import (
-    IngestionFileNotFound,
     CorruptedFileError,
-    InvalidSchemaError,
+    IngestionFileNotFound,
     IngestionMemoryError,
+    InvalidSchemaError,
 )
 
 logger = logging.getLogger(__name__)
@@ -51,23 +52,30 @@ def _read_csv_fallback(path: Path) -> pl.LazyFrame:
 def read_csv(path: str | Path) -> pl.LazyFrame:
     p = _assert_file_exists(Path(path))
 
-    logger.info({
-        "stage": "read_csv",
-        "path": str(p),
-        "method": "polars.scan_csv",
-        "size_mb": _file_size_mb(p),
-    })
+    logger.info(
+        {
+            "stage": "read_csv",
+            "path": str(p),
+            "method": "polars.scan_csv",
+            "size_mb": _file_size_mb(p),
+        }
+    )
 
     try:
         return pl.scan_csv(p)
     except pl.exceptions.ComputeError as e:
-        logger.warning({
-            "stage": "read_csv_fallback",
-            "path": str(p),
-            "error": str(e),
-            "fallback": "pandas",
-        })
+        logger.warning(
+            {
+                "stage": "read_csv_fallback",
+                "path": str(p),
+                "error": str(e),
+                "fallback": "pandas",
+            }
+        )
         return _read_csv_fallback(p)
+
+
+ReaderFn = Callable[[Path], pl.LazyFrame]
 
 
 def scan_file(path: str | Path) -> pl.LazyFrame:
@@ -77,26 +85,34 @@ def scan_file(path: str | Path) -> pl.LazyFrame:
     p = _assert_file_exists(Path(path))
     suffix = p.suffix.lower()
 
-    readers = {
+    readers: dict[str, ReaderFn] = {
         ".ndjson": pl.scan_ndjson,
-        ".jsonl":  pl.scan_ndjson,
-        ".csv":    read_csv,
+        ".jsonl": pl.scan_ndjson,
+        ".csv": read_csv,
         ".parquet": pl.scan_parquet,
     }
 
     if suffix in readers:
         try:
-            logger.info({"stage": "scan_file", "path": str(p), "method": readers[suffix].__name__})
+            logger.info(
+                {
+                    "stage": "scan_file",
+                    "path": str(p),
+                    "method": readers[suffix].__name__,
+                }
+            )
             return readers[suffix](p)
         except Exception as e:
             logger.error({"stage": "reader_error", "error": str(e), "path": str(p)})
             raise
 
-    logger.info({
-        "stage": "scan_file_json_fallback",
-        "path": str(p),
-        "method": "read_json -> .lazy()",
-    })
+    logger.info(
+        {
+            "stage": "scan_file_json_fallback",
+            "path": str(p),
+            "method": "read_json -> .lazy()",
+        }
+    )
 
     try:
         df = pl.read_json(p)

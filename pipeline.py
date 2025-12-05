@@ -1,19 +1,19 @@
 from __future__ import annotations
 
 import cProfile
-import pstats
-import time
 import logging
 import os
+import pstats
+import time
 from pathlib import Path
+from typing import Any, Callable, TypeVar
 
 import polars as pl
 
+from ingestion.exceptions import InvalidSchemaError
 from ingestion.reader import scan_file
 from ingestion.transformer import clean
 from ingestion.validator import validate_columns
-from ingestion.exceptions import InvalidSchemaError
-
 
 logger = logging.getLogger(__name__)
 _warned_memory = False
@@ -27,6 +27,8 @@ REQUIRED_SCHEMA = {
     "id": pl.Utf8,
     "name": pl.Utf8,
 }
+
+T = TypeVar("T")
 
 
 def _measure_memory_mb() -> float | None:
@@ -50,14 +52,17 @@ def _measure_memory_mb() -> float | None:
             logger.warning(
                 {
                     "stage": "profiling",
-                    "warning": "memory profiling unavailable (memory_profiler/psutil missing)",
+                    "warning": (
+                        "memory profiling unavailable "
+                        "(memory_profiler/psutil missing)"
+                    ),
                 }
             )
             _warned_memory = True
         return None
 
 
-def profile_pipeline(fn, *args, **kwargs):
+def profile_pipeline(fn: Callable[..., T], *args: Any, **kwargs: Any) -> T:
     profiler = cProfile.Profile()
     mem_before = _measure_memory_mb()
     profiler.enable()
@@ -102,7 +107,9 @@ def configure_logging(level: int = logging.INFO) -> None:
     )
 
 
-def load_clean(path: str | Path = "generation-data/large/data_large.ndjson") -> pl.LazyFrame:
+def load_clean(
+    path: str | Path = "generation-data/large/data_large.ndjson",
+) -> pl.LazyFrame:
     """
     1. Lazily scan the file.
     2. Validate required schema without materializing data.
@@ -123,19 +130,25 @@ def load_clean(path: str | Path = "generation-data/large/data_large.ndjson") -> 
     try:
         validate_columns(lf, REQUIRED_SCHEMA)
     except InvalidSchemaError as e:
-        logger.error({
-            "stage": "schema_invalid",
-            "path": str(p),
-            "error": str(e),
-            "expected": REQUIRED_SCHEMA,
-            "schema": lf.collect_schema() if isinstance(lf, pl.LazyFrame) else lf.schema,
-        })
+        logger.error(
+            {
+                "stage": "schema_invalid",
+                "path": str(p),
+                "error": str(e),
+                "expected": REQUIRED_SCHEMA,
+                "schema": (
+                    lf.collect_schema() if isinstance(lf, pl.LazyFrame) else lf.schema
+                ),
+            }
+        )
         raise
 
-    logger.info({
-        "stage": "schema_valid",
-        "schema": lf.collect_schema(),
-    })
+    logger.info(
+        {
+            "stage": "schema_valid",
+            "schema": lf.collect_schema(),
+        }
+    )
 
     cleaned = clean(lf)
     duration_ms = (time.perf_counter() - t0) * 1000
@@ -152,11 +165,13 @@ def main() -> None:
     # streaming=True only works when supported by the execution plan.
     sample = lazy_frame.limit(3).collect(engine="streaming")
 
-    logger.info({
-        "stage": "done",
-        "sample": sample.to_dicts(),
-        "rows_returned": sample.height,
-    })
+    logger.info(
+        {
+            "stage": "done",
+            "sample": sample.to_dicts(),
+            "rows_returned": sample.height,
+        }
+    )
 
 
 if __name__ == "__main__":
