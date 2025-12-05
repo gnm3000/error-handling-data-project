@@ -18,3 +18,6 @@ Key pieces:
 2. Run quality pipeline (uses the venv uv created):
    - Auto-fix and checks: `./scripts/run_quality.sh`
    - Check-only (no edits): `./scripts/run_quality.sh check`
+
+make run result:
+<img width="948" height="407" alt="image" src="https://github.com/user-attachments/assets/71f1e944-a134-4673-a60b-a66cf4bfdcce" />
