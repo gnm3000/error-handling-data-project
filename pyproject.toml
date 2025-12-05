@@ -67,6 +67,12 @@ pythonpath = ["."]
 skips = ["B101"] # allow assert in tests
 exclude_dirs = [".git", ".venv", "tests"]
 
+[project.urls]
+Homepage = "https://github.com/gnm3000/error-handling-data-project"
+Repository = "https://github.com/gnm3000/error-handling-data-project"
+Issues = "https://github.com/gnm3000/error-handling-data-project/issues"
+Changelog = "https://github.com/gnm3000/error-handling-data-project/releases"
+
 [dependency-groups]
 dev = [
     "scalene>=1.5.55",
