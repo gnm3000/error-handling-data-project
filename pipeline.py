@@ -12,7 +12,7 @@ import polars as pl
 from ingestion.reader import scan_file
 from ingestion.transformer import clean
 from ingestion.validator import validate_columns
-from ingestion.exceptions import InvalidSchemaError   # opcional pero recomendado
+from ingestion.exceptions import InvalidSchemaError
 
 
 logger = logging.getLogger(__name__)
@@ -119,7 +119,7 @@ def load_clean(path: str | Path = "generation-data/large/data_large.ndjson") -> 
         logger.error({"stage": "scan_error", "path": str(p), "error": str(e)})
         raise
 
-    # validate_columns does NOT materialize LazyFrame → safe
+    # validate_columns does NOT materialize the LazyFrame, so memory stays flat.
     try:
         validate_columns(lf, REQUIRED_SCHEMA)
     except InvalidSchemaError as e:
@@ -149,7 +149,7 @@ def main() -> None:
 
     lazy_frame = profile_pipeline(load_clean)
 
-    # Actualización: streaming=True funciona solo cuando es soportado por el plan de ejecución.
+    # streaming=True only works when supported by the execution plan.
     sample = lazy_frame.limit(3).collect(engine="streaming")
 
     logger.info({

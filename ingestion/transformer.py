@@ -16,7 +16,7 @@ def clean(df: FrameLike) -> pl.LazyFrame:
 
     t0 = time.perf_counter()
 
-    # Métricas previas (sampleadas para no materializar todo)
+    # Pre-clean metrics sampled to avoid materializing the full dataset.
     sample_before = frame.limit(SAMPLE_ROWS).collect(engine="streaming")
     null_counts = sample_before.null_count().to_dict(as_series=False)
     rows_sample_before = sample_before.height
@@ -36,7 +36,7 @@ def clean(df: FrameLike) -> pl.LazyFrame:
         }
     )
 
-    # Aplica limpieza lazy sobre la fuente completa
+    # Apply lazy cleaning across the full source without eager materialization.
     cleaned = (
         frame
         .drop_nulls()
@@ -56,7 +56,7 @@ def clean(df: FrameLike) -> pl.LazyFrame:
         .filter(pl.col("id") != "")
     )
 
-    # Métricas post (solo sobre la muestra ya obtenida)
+    # Post-clean metrics computed only on the already collected sample.
     sample_after = (
         sample_before.lazy()
         .drop_nulls()

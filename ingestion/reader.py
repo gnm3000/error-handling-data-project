@@ -30,7 +30,7 @@ def _assert_file_exists(path: Path) -> Path:
 def _read_csv_fallback(path: Path) -> pl.LazyFrame:
     """
     pandas fallback for malformed CSVs.
-    WARNING: eager operation → big memory hit for 1GB+ files.
+    WARNING: eager operation -> big memory hit for 1GB+ files.
     """
 
     size_mb = _file_size_mb(path)
@@ -40,7 +40,7 @@ def _read_csv_fallback(path: Path) -> pl.LazyFrame:
         )
 
     try:
-        df = pd.read_csv(path, engine="python")  # más tolerante
+        df = pd.read_csv(path, engine="python")
         return pl.from_pandas(df).lazy()
     except pd.errors.ParserError as e:
         raise CorruptedFileError(f"CSV corrupted: {path}") from e
@@ -80,7 +80,7 @@ def scan_file(path: str | Path) -> pl.LazyFrame:
     readers = {
         ".ndjson": pl.scan_ndjson,
         ".jsonl":  pl.scan_ndjson,
-        ".csv":    read_csv,          # delego al lector especializado
+        ".csv":    read_csv,
         ".parquet": pl.scan_parquet,
     }
 
@@ -92,11 +92,10 @@ def scan_file(path: str | Path) -> pl.LazyFrame:
             logger.error({"stage": "reader_error", "error": str(e), "path": str(p)})
             raise
 
-    # Fallback JSON array
     logger.info({
         "stage": "scan_file_json_fallback",
         "path": str(p),
-        "method": "read_json → .lazy()",
+        "method": "read_json -> .lazy()",
     })
 
     try:

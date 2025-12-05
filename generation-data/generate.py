@@ -51,6 +51,11 @@ def write_json(filepath: Path, payload: list[FakeRecord]) -> None:
         json.dump(payload, file, indent=2)
 
 
+def write_data_to_disk(path: str | Path, payload: list[FakeRecord]) -> None:
+    """Helper for tests to persist generated records to disk."""
+    write_json(Path(path), payload)
+
+
 def write_tabular(df: pl.DataFrame) -> None:
     df.write_csv(CSV_PATH)
     df.write_parquet(PARQUET_PATH)
