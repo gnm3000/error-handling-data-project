@@ -25,7 +25,11 @@ Key pieces:
 
 ## GitHub Packages
 
-- Publishing: create a GitHub Release (or run the `Publish (GitHub Packages)` workflow manually) and the new workflow at `.github/workflows/publish.yml` will build the sdist/wheel and upload to the repo’s GitHub Packages feed using `GITHUB_TOKEN`.
+- Owner: `gnm3000` (URL base: `https://pypi.pkg.github.com/gnm3000/`).
+- Publishing: create a GitHub Release (or run the `Publish (GitHub Packages)` workflow manually) and the workflow at `.github/workflows/publish.yml` will build the sdist/wheel and upload to the repo’s GitHub Packages feed.
+- Auth:
+  - Default: uses `GITHUB_TOKEN` with `packages:write` (works on this repo under `gnm3000`).
+  - Forks or restricted tokens: add a PAT with `write:packages` as secret `GITHUB_PACKAGES_TOKEN`.
 - Installing from GitHub Packages (requires a PAT with `packages:read`):
   ```bash
   OWNER=<org-or-user>
