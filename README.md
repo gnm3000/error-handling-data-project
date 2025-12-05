@@ -19,6 +19,9 @@ Key pieces:
    - Auto-fix and checks: `./scripts/run_quality.sh`
    - Check-only (no edits): `./scripts/run_quality.sh check`
 
-make run result:
+
+make run
+
 <img width="948" height="400" alt="image" src="https://github.com/user-attachments/assets/c44bb8d1-525b-4c6e-8060-fa1c9dec8ba6" />
 
+This image shows a large NDJSON file is scanned lazily, its schema validated, and a sampled pre-clean analysis is performed (100k rows). Cleanup steps run with minimal memory use. Profiling shows low overhead compared to full materialization. Finally, a small sample of three cleaned records is collected and logged, demonstrating the pipeline’s efficient lazy execution on multi-million-row data.
