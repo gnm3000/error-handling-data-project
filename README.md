@@ -23,6 +23,21 @@ Key pieces:
    - Auto-fix and checks: `./scripts/run_quality.sh`
    - Check-only (no edits): `./scripts/run_quality.sh check`
 
+## GitHub Packages
+
+- Publishing: create a GitHub Release (or run the `Publish (GitHub Packages)` workflow manually) and the new workflow at `.github/workflows/publish.yml` will build the sdist/wheel and upload to the repo’s GitHub Packages feed using `GITHUB_TOKEN`.
+- Installing from GitHub Packages (requires a PAT with `packages:read`):
+  ```bash
+  OWNER=<org-or-user>
+  PAT=<your-token>
+  pip install \
+    --index-url https://$OWNER:$PAT@pypi.pkg.github.com/$OWNER/ \
+    --extra-index-url https://pypi.org/simple \
+    data-engineer-application
+  ```
+  With uv: `uv pip install --index-url https://$OWNER:$PAT@pypi.pkg.github.com/$OWNER/ --extra-index-url https://pypi.org/simple data-engineer-application`
+  Remember to bump `version` in `pyproject.toml` before publishing a new release.
+
 
 make run
 
