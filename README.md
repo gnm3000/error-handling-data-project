@@ -20,4 +20,5 @@ Key pieces:
    - Check-only (no edits): `./scripts/run_quality.sh check`
 
 make run result:
-<img width="948" height="407" alt="image" src="https://github.com/user-attachments/assets/71f1e944-a134-4673-a60b-a66cf4bfdcce" />
+<img width="948" height="400" alt="image" src="https://github.com/user-attachments/assets/c44bb8d1-525b-4c6e-8060-fa1c9dec8ba6" />
+
