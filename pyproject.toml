@@ -73,3 +73,14 @@ dev = [
     "snakeviz>=2.2.2",
     "pytest-benchmark>=4.0.0",
 ]
+
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+py-modules = ["main", "pipeline"]
+
+[tool.setuptools.packages.find]
+include = ["ingestion"]
+exclude = ["analysis*", "tests*", "scripts*", "generation-data*", "build*", "dist*"]
