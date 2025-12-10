@@ -23,6 +23,21 @@ Key pieces:
    - Auto-fix and checks: `./scripts/run_quality.sh`
    - Check-only (no edits): `./scripts/run_quality.sh check`
 
+## Agent ETL CLI
+
+- Export `OPENAI_API_KEY` (and optionally `E2B_API_KEY` to enable isolated code execution).
+- Run the natural-language agent:
+
+```bash
+python -m main agent "Load data.json, keep columns X, Y, Z, and filter rows where X > 0." \
+  --input-path data.json \
+  --output-path output.parquet \
+  --model gpt-4o-mini
+```
+
+The agent always uses Polars (`execute_polars_etl`) and can execute helper snippets in an E2B sandbox (`run_python_in_sandbox`).
+See `agents/README.md` for a detailed flow overview and prompting tips.
+
 ## GitHub Packages
 
 - Owner: `gnm3000` (URL base: `https://pypi.pkg.github.com/gnm3000/`).
