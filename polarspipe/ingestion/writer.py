@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from typing import Literal
 
 import polars as pl
 
@@ -21,7 +22,8 @@ def write_frame(frame: FrameLike, path: str | Path, *, streaming: bool = False) 
 
     df = frame
     if isinstance(df, pl.LazyFrame):
-        df = df.collect(streaming=streaming)
+        engine: Literal["auto", "streaming"] = "streaming" if streaming else "auto"
+        df = df.collect(engine=engine)
 
     suffix = target.suffix.lower()
     if suffix in {".parquet"}:

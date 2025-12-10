@@ -2,10 +2,11 @@ from __future__ import annotations
 
 import json
 import os
-from typing import Any, TypedDict
+from typing import Any, TypedDict, cast
 
 from langgraph.graph import END, StateGraph
 from openai import OpenAI
+from openai.types.chat import ChatCompletionMessageParam
 
 from . import prompts
 from .tools import (
@@ -29,13 +30,15 @@ class AgentState(TypedDict, total=False):
 
 
 def _chat(
-    messages: list[dict[str, str]], *, response_format: dict | None = None
+    messages: list[ChatCompletionMessageParam],
+    *,
+    response_format: dict[str, Any] | None = None,
 ) -> str:
     resp = client.chat.completions.create(
         model=os.getenv("OPENAI_MODEL", "gpt-4.1"),
         messages=messages,
         temperature=0,
-        response_format=response_format,
+        response_format=cast(Any, response_format),
     )
     return resp.choices[0].message.content or ""
 
@@ -51,7 +54,7 @@ def node_parse(state: AgentState) -> AgentState:
     instruction = state["instruction"]
     base_spec = parse_etl_instruction(instruction)
 
-    messages = [
+    messages: list[ChatCompletionMessageParam] = [
         {"role": "system", "content": prompts.SYSTEM_PROMPT},
         {"role": "user", "content": prompts.PARSE_PROMPT},
         {
@@ -79,7 +82,7 @@ def node_parse(state: AgentState) -> AgentState:
 
 def node_plan(state: AgentState) -> AgentState:
     spec = state.get("etl_spec") or {}
-    messages = [
+    messages: list[ChatCompletionMessageParam] = [
         {"role": "system", "content": prompts.SYSTEM_PROMPT},
         {"role": "user", "content": prompts.PLAN_PROMPT},
         {"role": "user", "content": json.dumps(spec, indent=2)},

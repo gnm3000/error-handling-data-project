@@ -83,6 +83,7 @@ dev = [
     "scalene>=1.5.55",
     "snakeviz>=2.2.2",
     "pytest-benchmark>=4.0.0",
+    "mypy>=1.19.0",
 ]
 
 [build-system]

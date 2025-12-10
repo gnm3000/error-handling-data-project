@@ -1859,6 +1859,7 @@ dev = [
 
 [package.dev-dependencies]
 dev = [
+    { name = "mypy" },
     { name = "pytest-benchmark" },
     { name = "scalene" },
     { name = "snakeviz" },
@@ -1893,6 +1894,7 @@ provides-extras = ["dev"]
 
 [package.metadata.requires-dev]
 dev = [
+    { name = "mypy", specifier = ">=1.19.0" },
     { name = "pytest-benchmark", specifier = ">=4.0.0" },
     { name = "scalene", specifier = ">=1.5.55" },
     { name = "snakeviz", specifier = ">=2.2.2" },
