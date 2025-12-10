@@ -1,5 +1,5 @@
 [project]
-name = "data-engineer-application"
+name = "polarspipe"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
@@ -68,10 +68,10 @@ skips = ["B101"] # allow assert in tests
 exclude_dirs = [".git", ".venv", "tests"]
 
 [project.urls]
-Homepage = "https://github.com/gnm3000/error-handling-data-project"
-Repository = "https://github.com/gnm3000/error-handling-data-project"
-Issues = "https://github.com/gnm3000/error-handling-data-project/issues"
-Changelog = "https://github.com/gnm3000/error-handling-data-project/releases"
+Homepage = "https://github.com/gnm3000/polarspipe"
+Repository = "https://github.com/gnm3000/polarspipe"
+Issues = "https://github.com/gnm3000/polarspipe/issues"
+Changelog = "https://github.com/gnm3000/polarspipe/releases"
 
 [dependency-groups]
 dev = [

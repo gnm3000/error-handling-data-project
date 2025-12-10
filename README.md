@@ -1,8 +1,8 @@
-## Polarpipe
+## Polarspipe
 
 Polars-powered ETL playground for large semi-structured files. It generates fake user data, applies lightweight cleaning, and exercises validation/writer flows while keeping memory use low.
 
-Polars Optimization: [PR #4 – Polars Optimization](https://github.com/gnm3000/error-handling-data-project/pull/3)
+Polars Optimization: [PR – Polars Optimization](https://github.com/gnm3000/polarspipe/pull/3)
 
 
 Key pieces:
@@ -27,14 +27,14 @@ Key pieces:
 
 - Publish: create a Release or run the `Publish (GitHub Packages)` workflow manually; it uploads to PyPI via `.github/workflows/publish.yml` using `TWINE_USERNAME=__token__` and `PYPI_TOKEN` in secrets.
 - GitHub Packages visibility: GitHub automatically surfaces packages published to PyPI whose metadata points back to this repo.
-- Package name in PyPI is currently `data-engineer-application`; update to `polarpipe` when you cut the next release.
+- Package name in PyPI is `polarspipe`.
 - Install from PyPI:
   ```bash
-  pip install data-engineer-application
+  pip install polarspipe
   ```
   or with uv:
   ```bash
-  uv pip install data-engineer-application
+  uv pip install polarspipe
   ```
   Remember to bump `version` in `pyproject.toml` before publishing a release.
 

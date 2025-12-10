@@ -25,7 +25,7 @@ def load_generate_module() -> ModuleType:
 def test_main_prints_greeting(capsys: Any) -> None:
     main()
     captured = capsys.readouterr()
-    assert "Hello from data-engineer-application!" in captured.out
+    assert "Hello from polarspipe!" in captured.out
 
 
 def test_generate_and_persist(tmp_path: Path) -> None:
