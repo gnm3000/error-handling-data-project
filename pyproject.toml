@@ -5,9 +5,13 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "click>=8.1.7",
+    "e2b>=0.15.0",
     "faker>=38.2.0",
     "jupyter>=1.1.1",
+    "langgraph>=0.2.37",
     "memory-profiler>=0.61.0",
+    "openai>=1.47.0",
     "pandas>=2.3.3",
     "polars>=1.35.2",
     "pyarrow>=22.0.0",
@@ -84,9 +88,9 @@ dev = [
 requires = ["setuptools>=69", "wheel"]
 build-backend = "setuptools.build_meta"
 
-[tool.setuptools]
-py-modules = ["main", "pipeline"]
-
 [tool.setuptools.packages.find]
-include = ["ingestion"]
+include = ["polarspipe*"]
 exclude = ["analysis*", "tests*", "scripts*", "generation-data*", "build*", "dist*"]
+
+[project.scripts]
+polarspipe = "polarspipe.cli:cli"

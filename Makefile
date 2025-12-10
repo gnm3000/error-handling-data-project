@@ -16,4 +16,4 @@ generate-large:
 
 # Run the pipeline against the large NDJSON by default
 run:
-	$(PY) pipeline.py
+	$(PY) -m polarspipe.pipeline

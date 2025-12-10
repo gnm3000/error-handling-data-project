@@ -1,8 +1,8 @@
 import polars as pl
 import pytest
 
-from ingestion.exceptions import InvalidSchemaError
-from ingestion.validator import validate_columns
+from polarspipe.ingestion.exceptions import InvalidSchemaError
+from polarspipe.ingestion.validator import validate_columns
 
 
 def test_valid_schema() -> None:

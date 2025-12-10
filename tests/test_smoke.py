@@ -6,7 +6,7 @@ from pathlib import Path
 from types import ModuleType
 from typing import Any
 
-from main import main
+from polarspipe.main import main
 
 
 def load_generate_module() -> ModuleType:

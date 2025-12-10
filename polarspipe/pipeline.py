@@ -10,10 +10,10 @@ from typing import Any, Callable, TypeVar
 
 import polars as pl
 
-from ingestion.exceptions import InvalidSchemaError
-from ingestion.reader import scan_file
-from ingestion.transformer import clean
-from ingestion.validator import validate_columns
+from .ingestion.exceptions import InvalidSchemaError
+from .ingestion.reader import scan_file
+from .ingestion.transformer import clean
+from .ingestion.validator import validate_columns
 
 logger = logging.getLogger(__name__)
 _warned_memory = False
