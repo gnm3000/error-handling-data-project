@@ -1,8 +1,8 @@
-## Data Engineer Application
+## Polarspipe
 
-Small ingestion playground that generates fake user data, applies simple transforms, and exercises a validation/writer flow. It ships with a full quality toolchain to keep code style, typing, and security in check.
+Polars-powered ETL playground for large semi-structured files. It generates fake user data, applies lightweight cleaning, and exercises validation/writer flows while keeping memory use low.
 
-Polars Optimization: [PR #4 – Polars Optimization](https://github.com/gnm3000/error-handling-data-project/pull/3)
+Polars Optimization: [PR – Polars Optimization](https://github.com/gnm3000/polarspipe/pull/3)
 
 
 Key pieces:
@@ -23,24 +23,20 @@ Key pieces:
    - Auto-fix and checks: `./scripts/run_quality.sh`
    - Check-only (no edits): `./scripts/run_quality.sh check`
 
-## GitHub Packages
+## Publish and install (PyPI + GitHub Packages)
 
-- Owner: `gnm3000` (URL base: `https://pypi.pkg.github.com/gnm3000/`).
-- Publishing: create a GitHub Release (or run the `Publish (GitHub Packages)` workflow manually) and the workflow at `.github/workflows/publish.yml` will build the sdist/wheel and upload to the repo’s GitHub Packages feed.
-- Auth:
-  - Default: uses `GITHUB_TOKEN` with `packages:write` (works on this repo under `gnm3000`).
-  - Forks or restricted tokens: add a PAT with `write:packages` as secret `GITHUB_PACKAGES_TOKEN`.
-- Installing from GitHub Packages (requires a PAT with `packages:read`):
+- Publish: create a Release or run the `Publish (GitHub Packages)` workflow manually; it uploads to PyPI via `.github/workflows/publish.yml` using `TWINE_USERNAME=__token__` and `PYPI_TOKEN` in secrets.
+- GitHub Packages visibility: GitHub automatically surfaces packages published to PyPI whose metadata points back to this repo.
+- Package name in PyPI is `polarspipe`.
+- Install from PyPI:
   ```bash
-  OWNER=<org-or-user>
-  PAT=<your-token>
-  pip install \
-    --index-url https://$OWNER:$PAT@pypi.pkg.github.com/$OWNER/ \
-    --extra-index-url https://pypi.org/simple \
-    data-engineer-application
+  pip install polarspipe
   ```
-  With uv: `uv pip install --index-url https://$OWNER:$PAT@pypi.pkg.github.com/$OWNER/ --extra-index-url https://pypi.org/simple data-engineer-application`
-  Remember to bump `version` in `pyproject.toml` before publishing a new release.
+  or with uv:
+  ```bash
+  uv pip install polarspipe
+  ```
+  Remember to bump `version` in `pyproject.toml` before publishing a release.
 
 
 make run

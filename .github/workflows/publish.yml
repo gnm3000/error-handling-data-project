@@ -13,9 +13,6 @@ jobs:
   publish:
     runs-on: ubuntu-latest
 
-    env:
-      PACKAGE_OWNER: gnm3000
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -31,10 +28,9 @@ jobs:
           pip install build twine
           python -m build
 
-      - name: Publish to GitHub Packages
+      - name: Publish to PyPI
         env:
-          # Prefer a PAT if provided (supports forks/limited GITHUB_TOKEN scopes).
-          TWINE_USERNAME: ${{ env.PACKAGE_OWNER }}
-          TWINE_PASSWORD: ${{ secrets.GITHUB_PACKAGES_TOKEN || secrets.GITHUB_TOKEN }}
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
         run: |
-          twine upload --repository-url https://pypi.pkg.github.com/${{ env.PACKAGE_OWNER }}/ dist/*
+          python -m twine upload dist/*

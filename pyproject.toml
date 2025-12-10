@@ -1,5 +1,5 @@
 [project]
-name = "data-engineer-application"
+name = "polarspipe"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
@@ -66,6 +66,12 @@ pythonpath = ["."]
 [tool.bandit]
 skips = ["B101"] # allow assert in tests
 exclude_dirs = [".git", ".venv", "tests"]
+
+[project.urls]
+Homepage = "https://github.com/gnm3000/polarspipe"
+Repository = "https://github.com/gnm3000/polarspipe"
+Issues = "https://github.com/gnm3000/polarspipe/issues"
+Changelog = "https://github.com/gnm3000/polarspipe/releases"
 
 [dependency-groups]
 dev = [
