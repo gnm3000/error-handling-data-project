@@ -1,42 +1,18 @@
 from __future__ import annotations
 
 import json
-import os
 from pathlib import Path
 from typing import Any
 
 import click
+from dotenv import load_dotenv
 
 from .agent.tools import DEFAULT_OUTPUT_PATH
 from .agent.tracing import finish_run, start_run
 
+load_dotenv()
 
-def load_env_files() -> None:
-    """Load .env files (repo root or CWD) without overriding existing env vars."""
-    candidates = [
-        Path.cwd() / ".env",
-        Path(__file__).resolve().parent.parent / ".env",
-    ]
-    loaded = []
-
-    for env_path in candidates:
-        if not env_path.exists():
-            continue
-        for line in env_path.read_text(encoding="utf-8").splitlines():
-            stripped = line.strip()
-            if not stripped or stripped.startswith("#") or "=" not in stripped:
-                continue
-            key, value = stripped.split("=", 1)
-            os.environ.setdefault(key.strip(), value.strip())
-        loaded.append(str(env_path))
-
-    if loaded:
-        click.echo(f"[env] Loaded env file(s): {', '.join(loaded)}")
-
-
-# Load credentials before importing the agent (OpenAI client reads env on import).
-load_env_files()
-from .agent.graph import graph  # noqa: E402  (import after env load)
+from .agent.graph import graph  # noqa: E402  (load .env before initializing client)
 
 
 @click.group()

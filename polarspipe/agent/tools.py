@@ -37,14 +37,20 @@ def parse_etl_instruction(instruction: str) -> Dict[str, Any]:
         r"columns?\s+([\w,\s]+)", instruction, flags=re.IGNORECASE
     )
     if columns_match:
-        cols = [c.strip() for c in re.split(r"[,\\s]+", columns_match.group(1)) if c.strip()]
+        cols = [
+            c.strip() for c in re.split(r"[,\\s]+", columns_match.group(1)) if c.strip()
+        ]
         base["columns"] = [c for c in cols if c]
 
-    filter_match = re.search(r"(?:where|filter)\s+([^;]+)", instruction, flags=re.IGNORECASE)
+    filter_match = re.search(
+        r"(?:where|filter)\s+([^;]+)", instruction, flags=re.IGNORECASE
+    )
     if filter_match:
         base["filters_raw"] = filter_match.group(1).strip()
 
-    output_match = re.search(r"\bsave (?:as|to)\s+([^\s]+)", instruction, flags=re.IGNORECASE)
+    output_match = re.search(
+        r"\bsave (?:as|to)\s+([^\s]+)", instruction, flags=re.IGNORECASE
+    )
     if output_match:
         base["output_path"] = output_match.group(1).strip()
 

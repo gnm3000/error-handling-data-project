@@ -28,7 +28,9 @@ class AgentState(TypedDict, total=False):
     execution: dict[str, Any]
 
 
-def _chat(messages: list[dict[str, str]], *, response_format: dict | None = None) -> str:
+def _chat(
+    messages: list[dict[str, str]], *, response_format: dict | None = None
+) -> str:
     resp = client.chat.completions.create(
         model=os.getenv("OPENAI_MODEL", "gpt-4.1"),
         messages=messages,
@@ -55,10 +57,7 @@ def node_parse(state: AgentState) -> AgentState:
         {
             "role": "user",
             "content": (
-                "Seed spec: "
-                + json.dumps(base_spec)
-                + "\nInstruction: "
-                + instruction
+                "Seed spec: " + json.dumps(base_spec) + "\nInstruction: " + instruction
             ),
         },
     ]
