@@ -8,12 +8,12 @@ SCALENE_HTML="${SCALENE_HTML:-scalene_profile.html}"
 
 cpu_profile() {
   echo "Running cProfile -> ${PROFILE_PSTATS}"
-  uv run python -m cProfile -o "${PROFILE_PSTATS}" pipeline.py
+  uv run python -m cProfile -o "${PROFILE_PSTATS}" polarspipe/pipeline.py
 }
 
 scalene_profile() {
   echo "Running Scalene (CPU+memory) -> ${SCALENE_HTML}"
-  uv run scalene --html --outfile "${SCALENE_HTML}" pipeline.py
+  uv run scalene --html --outfile "${SCALENE_HTML}" polarspipe/pipeline.py
 }
 
 snakeviz_view() {

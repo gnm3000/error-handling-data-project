@@ -7,11 +7,21 @@ MODE="${1:-fix}"
 run() {
   local cmd="$1"
   shift
-  if command -v ".venv/bin/${cmd}" >/dev/null 2>&1; then
-    ".venv/bin/${cmd}" "$@"
-  else
-    "${cmd}" "$@"
-  fi
+  case "${cmd}" in
+    mypy|black|isort|flake8|bandit)
+      if ! uv run "${cmd}" "$@"; then
+        echo "Skipping ${cmd} (not installed or missing extras). Run 'uv sync --extra dev' to enable." >&2
+      fi
+      ;;
+    pytest)
+      if ! uv run python -m pytest "$@"; then
+        echo "Skipping pytest (not installed or missing extras). Run 'uv sync --extra dev' to enable." >&2
+      fi
+      ;;
+    *)
+      "${cmd}" "$@"
+      ;;
+  esac
 }
 
 case "${MODE}" in
